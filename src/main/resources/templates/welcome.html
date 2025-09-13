@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="/static/styles.css">
+<head>
+
+    <title>Welcome Page</title>
+</head>
+<body>
+
+<div class="modal-overlay" th:classappend="${arata_StergeFabrica} ? 'show' : ''">
+    <div class="modal-box">
+        <h2>Are you sure?</h2>
+        <form th:action="@{/sterge-fabrica}" method="post">
+            <input type="hidden" name="idDeStersFabrica" th:value="${idDeStersFabrica}" />
+            <div class="modal-buttons">
+                <button type="submit" class="yes-btn">Yes</button>
+                <a href="/welcome" class="no-btn" style="text-decoration: none; padding: 10px 20px;">No</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal-overlay" th:classappend="${arata_StergeAngajat} ? 'show' : ''">
+    <div class="modal-box">
+        <h2>Are you sure?</h2>
+        <form th:action="@{/sterge-angajat}" method="post">
+            <input type="hidden" name="idDeSters" th:value="${idDeStersAngajat}" />
+            <div class="modal-buttons">
+                <button type="submit" class="yes-btn">Yes</button>
+                <a href="/welcome" class="no-btn" style="text-decoration: none; padding: 10px 20px;">No</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal-overlay" th:classappend="${arata_StergeProdus} ? 'show' : ''">
+    <div class="modal-box">
+        <h2>Are you sure?</h2>
+        <form th:action="@{/sterge-produs}" method="post">
+            <input type="hidden" name="idDeSters" th:value="${idDeStersProdus}" />
+            <div class="modal-buttons">
+                <button type="submit" class="yes-btn">Yes</button>
+                <a href="/welcome" class="no-btn" style="text-decoration: none; padding: 10px 20px;">No</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal-overlay" th:classappend="${arata_StergeMaterial} ? 'show' : ''">
+    <div class="modal-box">
+        <h2>Are you sure?</h2>
+        <form th:action="@{/sterge-material}" method="post">
+            <input type="hidden" name="idDeSters" th:value="${idDeStersMaterial}" />
+            <div class="modal-buttons">
+                <button type="submit" class="yes-btn">Yes</button>
+                <a href="/welcome" class="no-btn" style="text-decoration: none; padding: 10px 20px;">No</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal-overlay" th:classappend="${arata_StergeComanda} ? 'show' : ''">
+    <div class="modal-box">
+        <h2>Are you sure?</h2>
+        <form th:action="@{/sterge-comanda}" method="post">
+            <input type="hidden" name="idDeSters" th:value="${idDeStersComanda}" />
+            <div class="modal-buttons">
+                <button type="submit" class="yes-btn">Yes</button>
+                <a href="/welcome" class="no-btn" style="text-decoration: none; padding: 10px 20px;">No</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal-overlay" th:classappend="${arata_StergeClient} ? 'show' : ''">
+    <div class="modal-box">
+        <h2>Are you sure?</h2>
+        <form th:action="@{/sterge-client}" method="post">
+            <input type="hidden" name="idDeSters" th:value="${idDeStersClient}" />
+            <div class="modal-buttons">
+                <button type="submit" class="yes-btn">Yes</button>
+                <a href="/welcome" class="no-btn" style="text-decoration: none; padding: 10px 20px;">No</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<h1>Bun Venit Pe Pagina De Administrare a Fabricilor</h1>
+
+<form class="search-container" th:action="@{/cauta}" method="get">
+
+    <div class="dropdown">
+        <label for="domeniu">Selectati Domeniul:</label>
+        <select name="domeniu" id="domeniu" required>
+            <option value="Fabrici">Fabrici</option>
+            <option value="Angajati">Angajati</option>
+            <option value="Produse">Produse</option>
+            <option value="Materiale">Materiale</option>
+            <option value="Comenzi">Comenzi</option>
+            <option value="Clienti">Clienti</option>
+            <option value="Toate">Toate</option>
+        </select>
+    </div>
+
+    <div>
+        <input type="text" id="cautare" name="cautare" placeholder="Introduceti ceea ce doriti sa cautati..."
+               th:value="${cautare}">
+    </div>
+
+    <button type="submit">Search</button>
+</form>
+
+
+<form id="form-fabrici" th:action="@{/update-fabrici}" th:object="${fabriciForma}" method="post">
+    <div class="container">
+        <div class="titluAdauga">
+            <h2 id ="titluFabrici" class="titluFabrici">Fabrici</h2>
+        </div>
+
+        <div th:if="${mesajFabricaGresita}" class="error-box"  style="font-weight: bold;">
+            <p th:text="${mesajFabricaGresita}"></p>
+        </div>
+        <button type="submit" name="action" value="update" class="submit-btn">Salveaza</button>
+    </div>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nume</th>
+            <th>Adresa</th>
+            <th>Telefon</th>
+            <th>Email</th>
+            <th>Acțiuni</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr id="ultima-fabrica" th:each="fabrica, iterStat : ${fabriciForma.fabrici}">
+            <td>
+                <input type="hidden" th:field="*{fabrici[__${iterStat.index}__].idFabrica}" />
+                <span th:text="${fabrica.idFabrica}"></span>
+            </td>
+            <td>
+                <input type="text" th:field="*{fabrici[__${iterStat.index}__].nume}" />
+            </td>
+            <td>
+                <input type="text" th:field="*{fabrici[__${iterStat.index}__].adresa}" />
+            </td>
+            <td>
+                <input type="text" th:field="*{fabrici[__${iterStat.index}__].telefon}" />
+            </td>
+            <td>
+                <input type="text" th:field="*{fabrici[__${iterStat.index}__].email}" />
+            </td>
+            <td>
+                <button type="submit" name="stergeIdFabrica" th:value="${fabrica.idFabrica}" class="delete-btn">
+                    Șterge
+                </button>
+<!--                <input type="hidden" name="stergeIdFabrica[__${iterStat.index}__]" th:value="${fabrica.idFabrica}" />-->
+<!--                <button type="submit" name="action" value="delete" class="delete-btn" ">Șterge</button>-->
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="niciunRezultat" th:if="${mesaj_niciunRezultat1}" th:text="${mesaj_niciunRezultat1}"></div>
+
+    <input type="submit" style="display:none" />
+</form>
+
+
+<div class = "adaugaButon">
+    <form th:action="@{/adauga-fabrica}" method="post">
+        <button type="submit" class="submit-btn">Adauga</button>
+    </form>
+</div>
+
+
+<form th:action="@{/update-angajati}" th:object="${angajatiForma}" method="post">
+    <div class="container">
+        <h2 id ="titluAngajati" class="titluAngajati">Angajati</h2>
+
+        <div th:if="${mesajAngajatGresit}" class="error-box"  style="font-weight: bold;">
+            <p th:text="${mesajAngajatGresit}"></p>
+        </div>
+        <button type="submit" name="action" value="update" class="submit-btn">Salveaza</button>
+    </div>
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nume</th>
+                <th>Adresa</th>
+                <th>Functie</th>
+                <th>Salariu</th>
+                <th>Data Angajarii</th>
+                <th>ID Fabrica</th>
+                <th>Sex</th>
+                <th>Acțiuni</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr id="ultimul-angajat" th:each="angajat, iterStat : ${angajatiForma.angajati}">
+                <td>
+                    <input type="hidden" th:field="*{angajati[__${iterStat.index}__].idAngajat}" />
+                    <span th:text="${angajat.idAngajat}"></span>
+                </td>
+                <td><input type="text" th:field="*{angajati[__${iterStat.index}__].nume}" /></td>
+                <td><input type="text" th:field="*{angajati[__${iterStat.index}__].adresa}" /></td>
+                <td><input type="text" th:field="*{angajati[__${iterStat.index}__].functie}" /></td>
+                <td><input type="text" th:field="*{angajati[__${iterStat.index}__].salariu}" /></td>
+                <td><input type="text" th:field="*{angajati[__${iterStat.index}__].dataAngajarii}" /></td>
+                <td><input type="text" th:field="*{angajati[__${iterStat.index}__].fabrica.idFabrica}" /></td>
+                <td><input type="text" th:field="*{angajati[__${iterStat.index}__].sex}" /></td>
+                <td>
+                    <button type="submit" name="stergeIdAngajat" th:value="${angajat.idAngajat}" class="delete-btn">
+                        Șterge
+                    </button>
+<!--                    <input type="hidden" name="stergeId" th:value="${angajat.idAngajat}" />-->
+<!--                    <button type="submit" name="action" value="delete" class="delete-btn" ">Șterge</button>-->
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="niciunRezultat" th:if="${mesaj_niciunRezultat2}" th:text="${mesaj_niciunRezultat2}"></div>
+
+        <input type="submit" style="display:none" />
+</form>
+
+
+
+<div class = "adaugaButon">
+    <form th:action="@{/adauga-angajat}" method="post">
+        <button type="submit" class="submit-btn">Adauga</button>
+    </form>
+</div>
+
+<form   th:action="@{/update-produse}" th:object="${produseForma}" method="post">
+    <div class = "container">
+        <h2 id ="titluProduse" class="titluProduse">Produse</h2>
+
+        <div th:if="${mesajProdusGresit}" class="error-box"  style="font-weight: bold;">
+            <p th:text="${mesajProdusGresit}"></p>
+        </div>
+
+        <button type="submit" class="submit-btn" name="action" value="update">Salveaza</button>
+    </div>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nume Produs</th>
+            <th>Tip/Categorie</th>
+            <th>Pret</th>
+            <th>ID Fabrica</th>
+            <th>Data Fabricarii</th>
+            <th>Acțiuni</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr  id="ultimul-produs"  th:each="produs, iterStat : ${produseForma.produse}">
+            <td>
+                <input type="hidden" th:field="*{produse[__${iterStat.index}__].idProdus}" />
+                <span th:text="${produs.idProdus}"></span>
+            </td>
+            <td>
+                <input type="text" th:field="*{produse[__${iterStat.index}__].numeProdus}" />
+            </td>
+            <td>
+                <input type="text" th:field="*{produse[__${iterStat.index}__].categorie}" />
+            </td>
+            <td>
+                <input type="text" th:field="*{produse[__${iterStat.index}__].pret}" />
+            </td>
+            <td>
+                <input type="text" th:field="*{produse[__${iterStat.index}__].fabrica.idFabrica}" />
+            </td>
+            <td>
+                <input type="text" th:field="*{produse[__${iterStat.index}__].dataFabricarii}" />
+            </td>
+            <td>
+                <button type="submit" name="stergeIdProdus" th:value="${produs.idProdus}" class="delete-btn">
+                    Șterge
+                </button>
+<!--                <input type="hidden" name="stergeId" th:value="${produs.idProdus}" />-->
+<!--                <button type="submit" name="action" value="delete" class="delete-btn" ">Șterge</button>-->
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="niciunRezultat" th:if="${mesaj_niciunRezultat3}" th:text="${mesaj_niciunRezultat3}"></div>
+    <input type="submit" style="display:none" />
+</form>
+
+<div class = "adaugaButon">
+    <form th:action="@{/adauga-produs}" method="post">
+        <button type="submit" class="submit-btn">Adauga</button>
+    </form>
+</div>
+
+<form th:action="@{/update-materiale}" th:object="${materialeForma}" method="post">
+    <div class = "container">
+        <h2 id="titluMateriale" class="titluMateriale">Materiale</h2>
+
+        <div th:if="${mesajMaterialGresit}" class="error-box"  style="font-weight: bold;">
+            <p th:text="${mesajMaterialGresit}"></p>
+        </div>
+
+        <button type="submit" class="submit-btn" name="action" value="update">Salveaza</button>
+    </div>
+    <table>
+        <thead>
+        <tr>
+            <th>ID Material</th>
+            <th>Nume</th>
+            <th>Descriere</th>
+            <th>Acțiuni</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr id="ultimul-material" th:each="material, iterStat : ${materialeForma.materiale}">
+            <td>
+                <input type="hidden" th:field="*{materiale[__${iterStat.index}__].idMaterial}" />
+                <span th:text="${material.idMaterial}"></span>
+            </td>
+            <td>
+                <input type="text" th:field="*{materiale[__${iterStat.index}__].nume}" />
+            </td>
+            <td>
+                <input type="text" th:field="*{materiale[__${iterStat.index}__].descriere}" />
+            </td>
+            <td>
+                <button type="submit" name="stergeIdMaterial" th:value="${material.idMaterial}" class="delete-btn">
+                    Șterge
+                </button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="niciunRezultat" th:if="${mesaj_niciunRezultat4}" th:text="${mesaj_niciunRezultat4}"></div>
+    <input type="submit" style="display:none" />
+</form>
+
+<div class="adaugaButon">
+    <form th:action="@{/adauga-material}" method="post">
+        <button type="submit" class="submit-btn">Adauga</button>
+    </form>
+</div>
+
+<form th:action="@{/update-comenzi}" th:object="${comenziForma}" method="post">
+    <div class = "container">
+        <h2 id="titluComenzi" class="titluComenzi">Comenzi</h2>
+
+        <div th:if="${mesajComandaGresit}" class="error-box"  style="font-weight: bold;">
+            <p th:text="${mesajComandaGresit}"></p>
+        </div>
+
+        <button type="submit" class="submit-btn" name="action" value="update">Salveaza</button>
+    </div>
+    <table>
+        <thead>
+        <tr>
+            <th>ID Comanda</th>
+            <th>Data Comenzii</th>
+            <th>Total</th>
+            <th>Status</th>
+            <th>ID Client</th>
+            <th>Acțiuni</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr id="ultima-comanda" th:each="comanda, iterStat : ${comenziForma.comenzi}">
+            <td>
+                <input type="hidden" th:field="*{comenzi[__${iterStat.index}__].idComanda}" />
+                <span th:text="${comanda.idComanda}"></span>
+            </td>
+            <td>
+                <input type="text" th:field="*{comenzi[__${iterStat.index}__].dataComenzii}" />
+            </td>
+            <td>
+                <input type="text" th:field="*{comenzi[__${iterStat.index}__].total}" />
+            </td>
+            <td>
+                <input type="text" th:field="*{comenzi[__${iterStat.index}__].status}" />
+            </td>
+            <td>
+                <input type="text" th:field="*{comenzi[__${iterStat.index}__].client.idClient}" />
+            </td>
+            <td>
+                <button type="submit" name="stergeIdComanda" th:value="${comanda.idComanda}" class="delete-btn">
+                    Șterge
+                </button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="niciunRezultat" th:if="${mesaj_niciunRezultat7}" th:text="${mesaj_niciunRezultat7}"></div>
+    <input type="submit" style="display:none" />
+</form>
+
+<div class="adaugaButon">
+    <form th:action="@{/adauga-comanda}" method="post">
+        <button type="submit" class="submit-btn">Adauga</button>
+    </form>
+</div>
+
+<form th:action="@{/update-clienti}" th:object="${clientiForma}" method="post">
+    <div class = "container">
+        <h2 id="titluClienti" class="titluClienti">Clienti</h2>
+
+        <div th:if="${mesajClientGresit}" class="error-box" style="font-weight: bold;">
+            <p th:text="${mesajClientGresit}"></p>
+        </div>
+
+        <button type="submit" class="submit-btn" name="action" value="update">Salveaza</button>
+    </div>
+    <table>
+        <thead>
+        <tr>
+            <th>ID Client</th>
+            <th>Nume</th>
+            <th>Adresa</th>
+            <th>Telefon</th>
+            <th>Email</th>
+            <th>Sex</th>
+            <th>Acțiuni</th>
+        </tr>
+        </thead>
+        <tbody>
+         <tr id="ultimul-client" th:each="client, iterStat : ${clientiForma.clienti}">
+            <td>
+                <input type="hidden" th:field="*{clienti[__${iterStat.index}__].idClient}" />
+                <span th:text="${client.idClient}"></span>
+            </td>
+            <td>
+                <input type="text" th:field="*{clienti[__${iterStat.index}__].nume}" />
+            </td>
+            <td>
+                <input type="text" th:field="*{clienti[__${iterStat.index}__].adresa}" />
+            </td>
+            <td>
+                <input type="text" th:field="*{clienti[__${iterStat.index}__].telefon}" />
+            </td>
+            <td>
+                <input type="text" th:field="*{clienti[__${iterStat.index}__].email}" />
+            </td>
+            <td>
+                <input type="text" th:field="*{clienti[__${iterStat.index}__].sex}" />
+            </td>
+            <td>
+                <button type="submit" name="stergeIdClient" th:value="${client.idClient}" class="delete-btn">
+                    Șterge
+                </button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="niciunRezultat" th:if="${mesaj_niciunRezultat8}" th:text="${mesaj_niciunRezultat8}"></div>
+    <input type="submit" style="display:none" />
+</form>
+
+<div class="adaugaButon">
+    <form th:action="@{/adauga-client}" method="post">
+        <button type="submit" class="submit-btn">Adauga</button>
+    </form>
+</div>
+
+<h1>Operatii asupra bazei de date</h1>
+<form th:action="@{/interogari}" method="post">
+    <label for="interogare">Selectați interogarea:</label>
+    <select id="interogare" name="interogare" >
+        <option value="1">Produse fabricate de fabrici cu mai mult de 5 angajați</option>
+        <option value="2">Fabricile fără angajați cu salarii mai mari de 5000 de lei</option>
+        <option value="3">Numărul total de produse fabricate în fabricile cu cel puțin 3 angajați</option>
+        <option value="4">Produse cu preț mai mare decât media prețurilor produselor</option>
+        <option value="5">Numărul total de produse fabricate de fiecare fabrică</option>
+        <option value="6">Lista produselor și fabricile care le-au fabricat</option>
+        <option value="7">Comenzile și clienții care le-au plasat</option>
+        <option value="8">Fabricile și angajații lor, inclusiv fabricile fără angajați</option>
+        <option value="9">Totalul salariilor plătite de fiecare fabrică</option>
+        <option value="10">Numărul de produse fabricate în fiecare categorie din fiecare fabrică</option>
+        <option value="11">Produse cu pret mai mare decat media si prag stabilit</option>
+    </select>
+
+<p th:text="${mesaj}"></p>
+
+<!-- Table for Query 1 -->
+<div class="tabel" th:classappend="${activeTable == '1'} ? 'afisat' : ''">
+    <table th:if="${activeTable == '1'}">
+        <thead>
+        <tr>
+            <th>Numele Produsului</th>
+            <th>Categoria Produsului</th>
+            <th>Prețul Produsului</th>
+            <th>Numele Fabricii</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="produs : ${interogare1Results}">
+            <td th:text="${produs[0]}"></td>
+            <td th:text="${produs[1]}"></td>
+            <td th:text="${produs[2]}"></td>
+            <td th:text="${produs[3]}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Table for Query 2 -->
+<div class="tabel" th:classappend="${activeTable == '2'} ? 'afisat' : ''">
+    <table th:if="${activeTable == '2'}">
+        <thead>
+        <tr>
+            <th>Numele Fabricii</th>
+            <th>Adresa Fabricii</th>
+            <th>Numele Angajatului</th>
+            <th>Salariul Angajatului</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="rezultat : ${interogare2Results}">
+            <td th:text="${rezultat[0]}"></td>
+            <td th:text="${rezultat[1]}"></td>
+            <td th:text="${rezultat[2]}"></td>
+            <td th:text="${rezultat[3]}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Table for Query 3 -->
+<div class="tabel" th:classappend="${activeTable == '3'} ? 'afisat' : ''">
+    <table th:if="${activeTable == '3'}">
+        <thead>
+        <tr>
+            <th>Număr Produse</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="rezultat : ${interogare3Results}">
+            <td th:text="${rezultat}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Table for Query 4 -->
+<div class="tabel" th:classappend="${activeTable == '4'} ? 'afisat' : ''">
+    <table th:if="${activeTable == '4'}">
+        <thead>
+        <tr>
+            <th>Nume Produs</th>
+            <th>Preț</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="produs : ${interogare4Results}">
+            <td th:text="${produs[0]}"></td>
+            <td th:text="${produs[1]}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Table for Query 5 -->
+<div class="tabel" th:classappend="${activeTable == '5'} ? 'afisat' : ''">
+    <table th:if="${activeTable == '5'}">
+        <thead>
+        <tr>
+            <th>Nume Fabrică</th>
+            <th>Număr Produse</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="rezultat : ${interogare5Results}">
+            <td th:text="${rezultat[0]}"></td>
+            <td th:text="${rezultat[1]}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Table for Query 6 -->
+<div class="tabel" th:classappend="${activeTable == '6'} ? 'afisat' : ''">
+    <table th:if="${activeTable == '6'}">
+        <thead>
+        <tr>
+            <th>Nume Produs</th>
+            <th>Categorie</th>
+            <th>Nume Fabrică</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="rezultat : ${interogare6Results}">
+            <td th:text="${rezultat[0]}"></td>
+            <td th:text="${rezultat[1]}"></td>
+            <td th:text="${rezultat[2]}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Table for Query 7 -->
+<div class="tabel" th:classappend="${activeTable == '7'} ? 'afisat' : ''">
+    <table th:if="${activeTable == '7'}">
+        <thead>
+        <tr>
+            <th>ID Comandă</th>
+            <th>Data Comandă</th>
+            <th>Nume Client</th>
+            <th>Email Client</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="rezultat : ${interogare7Results}">
+            <td th:text="${rezultat[0]}"></td>
+            <td th:text="${rezultat[1]}"></td>
+            <td th:text="${rezultat[2]}"></td>
+            <td th:text="${rezultat[3]}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Table for Query 8 -->
+<div class="tabel" th:classappend="${activeTable == '8'} ? 'afisat' : ''">
+    <table th:if="${activeTable == '8'}">
+        <thead>
+        <tr>
+            <th>Nume Fabrică</th>
+            <th>Adresă Fabrică</th>
+            <th>Nume Angajat</th>
+            <th>Funcție</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="rezultat : ${interogare8Results}">
+            <td th:text="${rezultat[0]}"></td>
+            <td th:text="${rezultat[1]}"></td>
+            <td th:text="${rezultat[2]}"></td>
+            <td th:text="${rezultat[3]}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+
+    <div class="tabel" th:classappend="${activeTable == '9'} ? 'afisat' : ''">
+        <table th:if="${activeTable == '9'}">
+            <thead>
+            <tr>
+                <th>Nume Fabrică</th>
+                <th>Total Salarii</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="rezultat : ${interogare9Results}">
+                <td th:text="${rezultat[0]}"></td>
+                <td th:text="${rezultat[1]}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="tabel" th:classappend="${activeTable == '10'} ? 'afisat' : ''">
+        <table th:if="${activeTable == '10'}">
+            <thead>
+            <tr>
+                <th>Nume Fabrică</th>
+                <th>Categorie Produs</th>
+                <th>Număr Produse</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="rezultat : ${interogare10Results}">
+                <td th:text="${rezultat[0]}"></td>
+                <td th:text="${rezultat[1]}"></td>
+                <td th:text="${rezultat[2]}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div>
+        <label for="stockThreshold">Introduceți pragul de pret:</label>
+        <input class="intrareDate" type="number" id="stockThreshold" name="stockThreshold" />
+    </div>
+
+    <button type="submit">Afișează</button>
+
+    <div class="tabel" th:classappend="${activeTable == '11'} ? 'afisat' : ''">
+        <table th:if="${activeTable == '11'}">
+            <thead>
+            <tr>
+                <th>Numele Produsului</th>
+                <th>Categoria Produsului</th>
+                <th>Prețul Produsului</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="produs : ${interogare11Results}">
+                <td th:text="${produs[0]}"></td>
+                <td th:text="${produs[1]}"></td>
+                <td th:text="${produs[2]}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</form>
+
+</body>
+</html>
