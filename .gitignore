@@ -1,0 +1,40 @@
+# Maven
+target/
+!.mvn/wrapper/maven-wrapper.jar
+
+# Build outputs
+classes/
+test-classes/
+*.jar
+*.war
+
+# IDEs
+.idea/
+*.iml
+.vscode/
+.classpath
+.project
+.settings/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs & runtime
+logs/
+*.log
+
+# Local env / secrets
+.env
+application.properties
+application.yml
+application-*.yml
+*.keystore
+*.p12
+
+# Others
+*.swp
+.history/
+
+HELP.MD
+loginAndWelcome.iml
